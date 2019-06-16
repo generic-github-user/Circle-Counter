@@ -6,9 +6,9 @@ for (var i = 0; i < r; i ++) {
 	x = Math.random() * canvas.width;
 	y = Math.random() * canvas.height;
 
-	context.beginPath();
-	context.arc(x, y, 25, 0, 2 * Math.PI, false);
-	context.fillStyle = 'black';
-	context.fill();
+	ctx.beginPath();
+	ctx.arc(x, y, 25, 0, 2 * Math.PI, false);
+	ctx.fillStyle = 'black';
+	ctx.fill();
 }
 console.log(r);
