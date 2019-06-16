@@ -2,6 +2,7 @@ canvas = document.querySelector('#canvas');
 ctx = canvas.getContext('2d');
 
 inputs = [];
+outputs = [];
 for (var i = 0; i < 10; i ++) {
 	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -17,8 +18,10 @@ for (var i = 0; i < 10; i ++) {
 	}
 	// do this (resize) as soon as possible
 	inputs.push(tf.browser.fromPixels(canvas).resizeBilinear([50, 50]))
+	outputs.push(Math.round(r));
 	console.log(r);
 }
 inputs = tf.stack(inputs);
+outputs = tf.tensor(outputs);
 
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
