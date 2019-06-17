@@ -26,6 +26,8 @@ outputs = tf.tensor(outputs);
 
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
 
+const loss = (pred, label) => pred.sub(label).square().mean();
+const optimizer = tf.train.sgd(0.01);
 const model = tf.sequential();
 const units = 10 * 10 * 3;
 model.add(tf.layers.flatten({inputShape: [10, 10, 3]}));
