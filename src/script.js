@@ -27,7 +27,7 @@ outputs = tf.tensor(outputs);
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
 
 const loss = (pred, label) => pred.sub(label).square().mean();
-const optimizer = tf.train.sgd(0.01);
+const optimizer = tf.train.sgd(0.00000001);
 const model = tf.sequential();
 const units = 10 * 10 * 1;
 model.add(tf.layers.flatten({inputShape: [10, 10, 1]}));
@@ -37,3 +37,9 @@ model.add(tf.layers.dense({units: units * 0.25}));
 model.add(tf.layers.dense({units: 1}));
 
 model.summary();
+for (var i = 0; i < 1000; i ++) {
+	prediction = model.predict(inputs);
+	optimizer.minimize(() => loss(model.predict(inputs), outputs));
+	//console.log(loss(prediction, outputs));
+	loss(model.predict(inputs), outputs).print();
+}
