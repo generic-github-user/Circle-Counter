@@ -17,7 +17,7 @@ for (var i = 0; i < 10; i ++) {
 		ctx.fill();
 	}
 	// do this (resize) as soon as possible
-	inputs.push(tf.browser.fromPixels(canvas).resizeBilinear([50, 50]))
+	inputs.push(tf.browser.fromPixels(canvas).resizeBilinear([10, 10]))
 	outputs.push(Math.round(r));
 	console.log(r);
 }
@@ -25,3 +25,13 @@ inputs = tf.stack(inputs);
 outputs = tf.tensor(outputs);
 
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
+
+const model = tf.sequential();
+const units = 10 * 10 * 3;
+model.add(tf.layers.flatten({inputShape: [10, 10, 3]}));
+model.add(tf.layers.dense({units: units * 0.75}));
+model.add(tf.layers.dense({units: units * 0.5}));
+model.add(tf.layers.dense({units: units * 0.25}));
+model.add(tf.layers.dense({units: 1}));
+
+model.summary();
