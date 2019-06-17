@@ -1,5 +1,7 @@
 canvas = document.querySelector('#canvas');
 ctx = canvas.getContext('2d');
+canvas_flat = document.querySelector('#flat');
+ctx_flat = canvas_flat.getContext('2d');
 
 inputs = [];
 outputs = [];
@@ -17,10 +19,15 @@ for (var i = 0; i < 10; i ++) {
 		ctx.fill();
 	}
 	// do this (resize) as soon as possible
-	inputs.push(tf.browser.fromPixels(canvas, 1).resizeBilinear([10, 10]))
+	imageData = tf.browser.fromPixels(canvas, 1).resizeBilinear([10, 10]);
+	inputs.push(imageData)
 	outputs.push(Math.round(r));
 	console.log(r);
 }
+tf.browser.toPixels(
+	imageData.resizeNearestNeighbor([canvas.width, canvas.height]),
+	canvas_flat
+);
 inputs = tf.stack(inputs);
 outputs = tf.tensor(outputs);
 
