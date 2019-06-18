@@ -46,12 +46,17 @@ model.add(tf.layers.dense({units: 1}));
 model.summary();
 
 function train() {
-	for (var i = 0; i < 1; i ++) {
-		prediction = model.predict(inputs);
-		optimizer.minimize(() => loss(model.predict(inputs), outputs));
-		//console.log(loss(prediction, outputs));
-		loss(model.predict(inputs), outputs).print();
-	}
+	tf.tidy(
+		() => {
+			for (var i = 0; i < 1; i ++) {
+				prediction = model.predict(inputs);
+				optimizer.minimize(() => loss(model.predict(inputs), outputs));
+				//console.log(loss(prediction, outputs));
+				loss(model.predict(inputs), outputs).print();
+			}
+			//console.log(tf.memory());
+		}
+	)
 }
 
 window.setInterval(train, 10);
