@@ -31,7 +31,12 @@ tf.browser.toPixels(
 	canvas_flat
 );
 inputs = tf.stack(inputs);
+training_in = inputs.slice([0], [70]);
+testing_in = inputs.slice([70], [30]);
+
 outputs = tf.tensor(outputs).expandDims(1);
+training_out = outputs.slice([0], [70]);
+testing_out = outputs.slice([70], [30]);
 
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
 
@@ -51,10 +56,12 @@ function train() {
 	tf.tidy(
 		() => {
 			for (var i = 0; i < 1; i ++) {
-				prediction = model.predict(inputs);
-				optimizer.minimize(() => loss(model.predict(inputs), outputs));
+				train_prediction = model.predict(training_in);
+				test_prediction = model.predict(testing_in);
+				
+				optimizer.minimize(() => loss(model.predict(training_in), training_out));
 				//console.log(loss(prediction, outputs));
-				loss(model.predict(inputs), outputs).print();
+				loss(test_prediction, testing_out).print();
 			}
 			//console.log(tf.memory());
 		}
