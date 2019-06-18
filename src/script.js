@@ -2,6 +2,8 @@ canvas = document.querySelector('#canvas');
 ctx = canvas.getContext('2d');
 canvas_flat = document.querySelector('#flat');
 ctx_flat = canvas_flat.getContext('2d');
+canvas_graph = document.querySelector('#graph');
+ctx_graph = canvas_graph.getContext('2d');
 
 inputs = [];
 outputs = [];
@@ -52,6 +54,11 @@ model.add(tf.layers.dense({units: 1}));
 
 model.summary();
 
+e = 0;
+epoch = [];
+train_loss = [];
+test_loss = [];
+
 function train() {
 	tf.tidy(
 		() => {
@@ -61,11 +68,80 @@ function train() {
 				
 				optimizer.minimize(() => loss(model.predict(training_in), training_out));
 				//console.log(loss(prediction, outputs));
-				loss(test_prediction, testing_out).print();
+				//loss(test_prediction, testing_out).print();
+				
+				if (e % 10 == 0) {
+					epoch.push(e);
+					train_loss.push(
+						loss(model.predict(training_in), training_out).dataSync()
+					);
+					test_loss.push(
+						loss(test_prediction, testing_out).dataSync()
+					);
+					graph.update();
+				}
+				
+				e ++;
 			}
 			//console.log(tf.memory());
 		}
 	)
 }
+
+const graph = new Chart(ctx_graph, {
+	type: 'line',
+	data: {
+		labels: epoch,
+		datasets: [
+			{
+				label: 'Training Loss',
+				borderColor: 'rgb(255, 99, 132)',
+				data: train_loss
+			},
+			{
+				label: 'Testing Loss',
+				borderColor: 'rgb(96, 157, 255)',
+				data: test_loss
+			}
+		]
+	},
+	// Graph options
+	options: {
+		// Title
+		title: {
+            display: true,
+            text: 'Loss'
+        },
+		// Axis labels
+		scales: {
+			xAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'Epoch'
+				}
+			}],
+			yAxes: [{
+				scaleLabel: {
+					display: true,
+					labelString: 'Loss'
+				}
+			}]
+		},
+		// Hide graph points
+		elements: {
+			point:{
+				radius: 0
+			}
+		},
+		// Don't animate graph (for optimization)
+		animation: {
+			duration: 0
+		},
+		hover: {
+			animationDuration: 0
+		},
+		responsiveAnimationDuration: 0
+	}
+});
 
 window.setInterval(train, 10);

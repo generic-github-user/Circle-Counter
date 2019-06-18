@@ -5,11 +5,18 @@
 		<title>
 			Circle Counter
 		</title>
+		<link rel="stylesheet" type="text/css" href="https://rawgit.com/wagenaartje/neataptic/master/graph/graph.css">
 	</head>
 	<body>
 		<canvas id='canvas' width='500' height='500'></canvas>
 		<canvas id='flat' width='500' height='500'></canvas>
+		
+		<div id="graph-container">
+			<canvas width="500px" height="500px" id="graph" />
+		</div>
+		
 		<script src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js'></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
 		<script src='script.js'></script>
 	</body>
 </html>
