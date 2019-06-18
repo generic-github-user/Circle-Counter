@@ -44,9 +44,14 @@ model.add(tf.layers.dense({units: units * 0.25}));
 model.add(tf.layers.dense({units: 1}));
 
 model.summary();
-for (var i = 0; i < 1000; i ++) {
-	prediction = model.predict(inputs);
-	optimizer.minimize(() => loss(model.predict(inputs), outputs));
-	//console.log(loss(prediction, outputs));
-	loss(model.predict(inputs), outputs).print();
+
+function train() {
+	for (var i = 0; i < 1; i ++) {
+		prediction = model.predict(inputs);
+		optimizer.minimize(() => loss(model.predict(inputs), outputs));
+		//console.log(loss(prediction, outputs));
+		loss(model.predict(inputs), outputs).print();
+	}
 }
+
+window.setInterval(train, 10);
