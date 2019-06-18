@@ -5,10 +5,11 @@ ctx_flat = canvas_flat.getContext('2d');
 
 inputs = [];
 outputs = [];
-for (var i = 0; i < 10; i ++) {
+for (var i = 0; i < 100; i ++) {
 	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	r = Math.random() * 10;
+	//r = Math.floor(Math.random() * 2);
+	r = Math.floor(Math.random() * 10);
 	for (var j = 0; j < r; j ++) {
 		x = Math.random() * canvas.width;
 		y = Math.random() * canvas.height;
@@ -19,7 +20,8 @@ for (var i = 0; i < 10; i ++) {
 		ctx.fill();
 	}
 	// do this (resize) as soon as possible
-	imageData = tf.browser.fromPixels(canvas, 1).resizeBilinear([10, 10]);
+	// use mapping function instead
+	imageData = tf.browser.fromPixels(canvas, 1).resizeBilinear([10, 10]).div(tf.scalar(255));
 	inputs.push(imageData)
 	outputs.push(Math.round(r));
 	console.log(r);
@@ -29,12 +31,12 @@ tf.browser.toPixels(
 	canvas_flat
 );
 inputs = tf.stack(inputs);
-outputs = tf.tensor(outputs);
+outputs = tf.tensor(outputs).expandDims(1);
 
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
 
 const loss = (pred, label) => pred.sub(label).square().mean();
-const optimizer = tf.train.sgd(0.00000001);
+const optimizer = tf.train.adam(0.001);
 const model = tf.sequential();
 const units = 10 * 10 * 1;
 model.add(tf.layers.flatten({inputShape: [10, 10, 1]}));
