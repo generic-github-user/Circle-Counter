@@ -105,10 +105,6 @@ function train() {
 				train_prediction = model.predict(training_in);
 				test_prediction = model.predict(testing_in);
 				
-				optimizer.minimize(() => loss(model.predict(training_in), training_out));
-				//console.log(loss(prediction, outputs));
-				//loss(test_prediction, testing_out).print();
-				
 				if (e % 10 == 0) {
 					epoch.push(e);
 					train_loss.push(
@@ -121,6 +117,10 @@ function train() {
 				}
 				
 				e ++;
+				
+				optimizer.minimize(() => loss(model.predict(training_in), training_out));
+				//console.log(loss(prediction, outputs));
+				//loss(test_prediction, testing_out).print();
 			}
 			//console.log(tf.memory());
 		}
