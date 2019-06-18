@@ -38,9 +38,9 @@ const optimizer = tf.train.sgd(0.00000001);
 const model = tf.sequential();
 const units = 10 * 10 * 1;
 model.add(tf.layers.flatten({inputShape: [10, 10, 1]}));
-model.add(tf.layers.dense({units: units * 0.75}));
-model.add(tf.layers.dense({units: units * 0.5}));
-model.add(tf.layers.dense({units: units * 0.25}));
+model.add(tf.layers.dense({units: units * 0.75, activation: 'tanh'}));
+model.add(tf.layers.dense({units: units * 0.5, activation: 'tanh'}));
+model.add(tf.layers.dense({units: units * 0.25, activation: 'tanh'}));
 model.add(tf.layers.dense({units: 1}));
 
 model.summary();
