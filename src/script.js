@@ -6,6 +6,10 @@ canvas_graph = document.querySelector('#graph');
 ctx_graph = canvas_graph.getContext('2d');
 
 num_data = 250;
+resolution = [20, 20];
+
+res = resolution;
+
 inputs = [];
 outputs = [];
 for (var i = 0; i < num_data; i ++) {
@@ -24,7 +28,7 @@ for (var i = 0; i < num_data; i ++) {
 	}
 	// do this (resize) as soon as possible
 	// use mapping function instead
-	imageData = tf.browser.fromPixels(canvas, 1).resizeBilinear([10, 10]).div(tf.scalar(255));
+	imageData = tf.browser.fromPixels(canvas, 1).resizeBilinear(res).div(tf.scalar(255));
 	inputs.push(imageData)
 	outputs.push(Math.round(r));
 	console.log(r);
@@ -52,8 +56,8 @@ testing_out = outputs.slice([tr_s], [te_s]);
 const loss = (pred, label) => pred.sub(label).square().mean();
 const optimizer = tf.train.adam(0.001);
 const model = tf.sequential();
-const units = 10 * 10 * 1;
-model.add(tf.layers.flatten({inputShape: [10, 10, 1]}));
+const units = res[0] * res[1] * 1;
+model.add(tf.layers.flatten({inputShape: [res[0], res[1], 1]}));
 model.add(tf.layers.dense({units: units * 0.75, activation: 'tanh'}));
 model.add(tf.layers.dense({units: units * 0.5, activation: 'tanh'}));
 model.add(tf.layers.dense({units: units * 0.25, activation: 'tanh'}));
