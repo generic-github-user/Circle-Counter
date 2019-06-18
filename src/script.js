@@ -5,9 +5,10 @@ ctx_flat = canvas_flat.getContext('2d');
 canvas_graph = document.querySelector('#graph');
 ctx_graph = canvas_graph.getContext('2d');
 
+num_data = 250;
 inputs = [];
 outputs = [];
-for (var i = 0; i < 100; i ++) {
+for (var i = 0; i < num_data; i ++) {
 	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	//r = Math.floor(Math.random() * 2);
@@ -32,13 +33,19 @@ tf.browser.toPixels(
 	imageData.resizeNearestNeighbor([canvas.width, canvas.height]),
 	canvas_flat
 );
+
+train_split = Math.floor(num_data * 0.7);
+test_split = Math.floor(num_data * 0.3);
+tr_s = train_split;
+te_s = test_split;
+
 inputs = tf.stack(inputs);
-training_in = inputs.slice([0], [70]);
-testing_in = inputs.slice([70], [30]);
+training_in = inputs.slice([0], [tr_s]);
+testing_in = inputs.slice([tr_s], [te_s]);
 
 outputs = tf.tensor(outputs).expandDims(1);
-training_out = outputs.slice([0], [70]);
-testing_out = outputs.slice([70], [30]);
+training_out = outputs.slice([0], [tr_s]);
+testing_out = outputs.slice([tr_s], [te_s]);
 
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
 
