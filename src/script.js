@@ -145,28 +145,44 @@ epoch = [];
 train_loss = [];
 test_loss = [];
 //out = tf.tensor([0])
+
+// Create variable to store layer output so it isn't disposed, but we're not creating a new tensor with each call of the function
 out = tf.variable(tf.zeros([lvs, lvs, 1]))
 
+// Render activations of neural network layers
 function renderConvLayers () {
 	console.log('---------------------------------')
 	console.log(tf.memory())
+	// Loop through each layer of the network
 	for (let j = 0; j < 1; j ++) {
 		console.log('j __________')
+		// Loop through each filter in the conv layer, if applicable
 		for (let w = 0; w < conv_filters; w ++) {
 			tf.tidy(
 				() => {
 					console.log(tf.memory())
+					// Generate layer output
+					// TODO: only run layer calculations once, then perform slicing operations on each filter result individually (for optimization)
 					val = model.layers[0]
 						.apply(
-							inputs.slice([num_data - 1], [1])
+							// Slice one image from the input tensor
+							inputs.slice(
+								[num_data - 1],
+								[1]
+							)
 						)
+						// Get rid of batch dimension
 						.squeeze()
+						// Slice one filter from the layer output
 						.slice(
 							[0, 0, w - 1],
 							[28, 28, 1]
 						)
+						// Limit to correct value range for float32 tensor
 						.clipByValue(0, 1)
+						// Resize to match canvas size
 						.resizeNearestNeighbor([lvs, lvs])
+					// Assign to variable so all this ^ can be disposed
 					out.assign(val);
 					
 					console.log(tf.memory())
@@ -179,11 +195,16 @@ function renderConvLayers () {
 						(d) => {
 							//console.log(j)
 							//console.log(d)
+							
+							// Render filter output to canvas
 							ctx_convis[j].putImageData(
+								// Create ImageData object
 								new ImageData(d, lvs, lvs),
 								0,
+								// Top is filter number * layer_vis_size
 								w * lvs
 							)
+							
 							//out.dispose();
 							//console.log(out)
 							//tf.disposeVariables();
