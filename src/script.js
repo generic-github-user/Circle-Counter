@@ -183,8 +183,6 @@ out = tf.variable(tf.zeros([lvs, lvs, 1]))
 
 // Render activations of neural network layers
 function renderConvLayers() {
-	console.log('---------------------------------')
-	console.log(tf.memory())
 	tf.tidy(
 		() => {
 			// Slice one image from the input tensor
@@ -215,9 +213,7 @@ function renderConvLayers() {
 						.resizeNearestNeighbor([lvs, lvs]);
 					// Assign to variable so all this ^ can be disposed
 					out.assign(b);
-					console.log(tf.memory())
 					
-					console.log(tf.memory())
 					tf.browser.toPixels(
 						out,
 						//out.squeeze().reshape([28*4, 28*2, 1]).clipByValue(0, 1).resizeNearestNeighbor([200, 400]),
@@ -233,18 +229,17 @@ function renderConvLayers() {
 								w * lvs
 							)
 						}
-					)
-					console.log(tf.memory())
+					);
 				}
 			}
 		}
 	)
-	console.log(tf.memory())
 }
 
 function train() {
 	if (e % 10 == 0 || e == 0) {
 		renderConvLayers();
+		console.log(tf.memory());
 	}
 	
 	tf.tidy(
@@ -270,7 +265,6 @@ function train() {
 				//console.log(loss(prediction, outputs));
 				//loss(test_prediction, testing_out).print();
 			}
-			//console.log(tf.memory());
 		}
 	)
 }
