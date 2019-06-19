@@ -63,7 +63,9 @@ for (var i = 0; i < num_data; i ++) {
 	// do this (resize) as soon as possible
 	// use mapping function instead
 	// Save canvas to a tensor
-	imageData = tf.browser.fromPixels(canvas, 1).resizeBilinear(res).div(tf.scalar(255));
+	imageData = tf.browser.fromPixels(canvas, 1)
+		.resizeBilinear(res)
+		.div(tf.scalar(255));
 	// Add image data to list of inputs
 	inputs.push(imageData)
 	// Add output (number of generated circles) to output array
@@ -216,16 +218,12 @@ function renderConvLayers() {
 					console.log(tf.memory())
 					
 					console.log(tf.memory())
-					//console.log(out)
 					tf.browser.toPixels(
 						out,
 						//out.squeeze().reshape([28*4, 28*2, 1]).clipByValue(0, 1).resizeNearestNeighbor([200, 400]),
 						//tf.randomUniform([28, 28, 1]).resizeNearestNeighbor([100, 100]),
 					).then(
 						(d) => {
-							//console.log(j)
-							//console.log(d)
-							
 							// Render filter output to canvas
 							ctx_convis[j].putImageData(
 								// Create ImageData object
@@ -234,16 +232,9 @@ function renderConvLayers() {
 								// Top is filter number * layer_vis_size
 								w * lvs
 							)
-							
-							//out.dispose();
-							//console.log(out)
-							//tf.disposeVariables();
 						}
 					)
 					console.log(tf.memory())
-					
-					//.resolve()
-					//console.log(data);
 				}
 			}
 		}
