@@ -31,20 +31,27 @@ train_percent = 70;
 test_percent = 30;
 optimizer = tf.train.adam(0.0001);
 
+// Aliases (for convenience)
 res = resolution;
 lvs = layer_vis_size;
 
+// Arrays of complete sets of inputs and outputs
 inputs = [];
 outputs = [];
+// Generate random circles on canvas
 for (var i = 0; i < num_data; i ++) {
+	// Reset canvas
 	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	//r = Math.floor(Math.random() * 2);
 	r = Math.floor(Math.random() * 10);
+	// Select a random number of circles to draw
 	for (var j = 0; j < r; j ++) {
+		// Generate random coordinates within canvas
 		x = Math.random() * canvas.width;
 		y = Math.random() * canvas.height;
 
+		// Draw circle
 		ctx.beginPath();
 		ctx.arc(x, y, 25, 0, 2 * Math.PI, false);
 		ctx.fillStyle = 'black';
@@ -52,13 +59,18 @@ for (var i = 0; i < num_data; i ++) {
 	}
 	// do this (resize) as soon as possible
 	// use mapping function instead
+	// Save canvas to a tensor
 	imageData = tf.browser.fromPixels(canvas, 1).resizeBilinear(res).div(tf.scalar(255));
+	// Add image data to list of inputs
 	inputs.push(imageData)
+	// Add output (number of generated circles) to output array
 	outputs.push(Math.round(r));
 	console.log(r);
 }
+// Draw downscaled version of input image to canvas
 tf.browser.toPixels(
-	imageData.resizeNearestNeighbor([canvas.width, canvas.height]),
+	imageData
+	.resizeNearestNeighbor([canvas.width, canvas.height]),
 	canvas_flat
 );
 
