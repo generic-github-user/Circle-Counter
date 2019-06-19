@@ -5,6 +5,16 @@ ctx_flat = canvas_flat.getContext('2d');
 canvas_graph = document.querySelector('#graph');
 ctx_graph = canvas_graph.getContext('2d');
 
+canvases_convis = [];
+ctx_convis = [];
+for (var i = 0; i < 3; i ++) {
+	convis.innerHTML += '<canvas id="conv-'+i+'" width="100" height="800"></canvas>';
+}
+for (var i = 0; i < 3; i ++) {
+	canvases_convis.push(document.querySelector('#conv-' + i));
+	ctx_convis.push(canvases_convis[i].getContext('2d'));
+}
+
 num_data = 250;
 resolution = [20, 20];
 
