@@ -151,27 +151,28 @@ test_loss = [];
 out = tf.variable(tf.zeros([lvs, lvs, 1]))
 
 // Render activations of neural network layers
-function renderConvLayers () {
+function renderConvLayers() {
 	console.log('---------------------------------')
 	console.log(tf.memory())
-	// Loop through each layer of the network
-	for (let j = 0; j < 1; j ++) {
-		console.log('j __________')
-		// Loop through each filter in the conv layer, if applicable
-		for (let w = 0; w < conv_filters; w ++) {
-			tf.tidy(
-				() => {
-					console.log(tf.memory())
-					// Generate layer output
-					// TODO: only run layer calculations once, then perform slicing operations on each filter result individually (for optimization)
-					val = model.layers[0]
-						.apply(
-							// Slice one image from the input tensor
-							inputs.slice(
-								[num_data - 1],
-								[1]
-							)
+	tf.tidy(
+		() => {
+			// Loop through each layer of the network
+			for (let j = 0; j < 1; j ++) {
+				console.log('j __________')
+				// Generate layer output
+				val = model.layers[0]
+					.apply(
+						// Slice one image from the input tensor
+						inputs.slice(
+							[num_data - 1],
+							[1]
 						)
+					)
+					// Limit to correct value range for float32 tensor
+					.clipByValue(0, 1)
+				// Loop through each filter in the conv layer, if applicable
+				for (let w = 0; w < conv_filters; w ++) {
+					b = val
 						// Get rid of batch dimension
 						.squeeze()
 						// Slice one filter from the layer output
@@ -179,12 +180,11 @@ function renderConvLayers () {
 							[0, 0, w - 1],
 							[28, 28, 1]
 						)
-						// Limit to correct value range for float32 tensor
-						.clipByValue(0, 1)
 						// Resize to match canvas size
-						.resizeNearestNeighbor([lvs, lvs])
+						.resizeNearestNeighbor([lvs, lvs]);
 					// Assign to variable so all this ^ can be disposed
-					out.assign(val);
+					out.assign(b);
+					console.log(tf.memory())
 					
 					console.log(tf.memory())
 					//console.log(out)
@@ -212,13 +212,13 @@ function renderConvLayers () {
 						}
 					)
 					console.log(tf.memory())
+					
+					//.resolve()
+					//console.log(data);
 				}
-			)
-			
-			//.resolve()
-			//console.log(data);
+			}
 		}
-	}
+	)
 	console.log(tf.memory())
 }
 
