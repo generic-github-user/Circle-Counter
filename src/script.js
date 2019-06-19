@@ -69,10 +69,15 @@ testing_out = outputs.slice([tr_s], [te_s]);
 
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
 
+// Loss function (mean squared error)
 const loss = (pred, label) => pred.sub(label).square().mean();
+// Initialize model
 const model = tf.sequential();
+// Number of data points in input (depreciated)
 const units = res[0] * res[1] * 1;
 
+// Convolutional layers
+// First conv2d layer
 model.add(tf.layers.conv2d(
 	{
 		inputShape: [res[0], res[1], 1],
@@ -82,12 +87,14 @@ model.add(tf.layers.conv2d(
 		activation: 'relu'
 	}
 ));
+// Second maxPooling2d layer
 model.add(tf.layers.maxPooling2d(
 	{
 		poolSize: 2,
 		strides: 2
 	}
 ));
+// Third conv2d layer
 model.add(tf.layers.conv2d(
 	{
 		filters: conv_filters,
@@ -96,12 +103,14 @@ model.add(tf.layers.conv2d(
 		activation: 'relu'
 	}
 ));
+// First maxPooling2d layer
 model.add(tf.layers.maxPooling2d(
 	{
 		poolSize: 2,
 		strides: 2
 	}
 ));
+// Second conv2d layer
 model.add(tf.layers.conv2d(
 	{
 		filters: conv_filters,
@@ -110,6 +119,7 @@ model.add(tf.layers.conv2d(
 		activation: 'relu'
 	}
 ));
+// Third maxPooling2d layer
 model.add(tf.layers.maxPooling2d(
 	{
 		poolSize: 2,
@@ -117,12 +127,17 @@ model.add(tf.layers.maxPooling2d(
 	}
 ));
 
+// Flatten output of conv layer series into one 1-dimensional tensor
 model.add(tf.layers.flatten({}));
+// Add a dense layer to perform final calculations on data processed by conv layers
 model.add(tf.layers.dense({units: 32}));
+// Leaky ReLU to introduce more nonlinearity
 model.add(tf.layers.leakyReLU());
+// Dropout layer to prevent overfitting
 model.add(tf.layers.dropout(0.8, {rate: 0.8}));
 model.add(tf.layers.dense({units: 1}));
 
+// Display model summary in console
 model.summary();
 
 e = 0;
