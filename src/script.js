@@ -24,7 +24,9 @@ for (var i = 0; i < num_vis_layers; i ++) {
 	ctx_convis.push(canvases_convis[i].getContext('2d'));
 }
 
+// Settings
 num_data = 250;
+max_circles = 10;
 resolution = [30, 30];
 conv_filters = 8;
 layer_vis_size = 100;
@@ -33,6 +35,7 @@ train_percent = 70;
 test_percent = 30;
 optimizer = tf.train.adam(0.0001);
 num_vis_layers = 5;
+use_one_hot = false;
 
 // Aliases (for convenience)
 res = resolution;
@@ -47,8 +50,8 @@ for (var i = 0; i < num_data; i ++) {
 	ctx.fillStyle = 'white';
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	//r = Math.floor(Math.random() * 2);
-	r = Math.floor(Math.random() * 10);
 	// Select a random number of circles to draw
+	r = Math.floor(Math.random() * max_circles);
 	for (var j = 0; j < r; j ++) {
 		// Generate random coordinates within canvas
 		x = Math.random() * canvas.width;
@@ -93,8 +96,11 @@ training_in = inputs.slice([0], [tr_s]);
 testing_in = inputs.slice([tr_s], [te_s]);
 
 // Generate a tensor from the output data
-outputs = tf.tensor(outputs).expandDims(1);
-//outputs = tf.oneHot(outputs, max_circles);
+if (use_one_hot) {
+	outputs = tf.oneHot(outputs, max_circles);
+} else {
+	outputs = tf.tensor(outputs).expandDims(1);	
+}
 // Split output tensor into training/testing data
 training_out = outputs.slice([0], [tr_s]);
 testing_out = outputs.slice([tr_s], [te_s]);
@@ -167,7 +173,12 @@ model.add(tf.layers.dense({units: 32}));
 model.add(tf.layers.leakyReLU());
 // Dropout layer to prevent overfitting
 model.add(tf.layers.dropout(0.8, {rate: 0.8}));
-model.add(tf.layers.dense({units: 1}));
+
+if (use_one_hot) {
+	model.add(tf.layers.dense({units: max_circles, activation: 'softmax'}));
+} else {
+	model.add(tf.layers.dense({units: 1}));
+}
 
 // Display model summary in console
 model.summary();
@@ -261,7 +272,11 @@ function train() {
 				
 				e ++;
 				
-				optimizer.minimize(() => loss(model.predict(training_in), training_out));
+				if (use_one_hot) {
+					optimizer.minimize(() => tf.losses.softmaxCrossEntropy(training_out, model.predict(training_in)));
+				} else {
+					optimizer.minimize(() => loss(model.predict(training_in), training_out));
+				}
 				//console.log(loss(prediction, outputs));
 				//loss(test_prediction, testing_out).print();
 			}
