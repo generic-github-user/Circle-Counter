@@ -1,4 +1,20 @@
+// Settings
+num_data = 250;
+max_circles = 10;
+resolution = [30, 30];
+conv_filters = 8;
+layer_vis_size = 100;
+training_delay = 0.01;
+train_percent = 70;
+test_percent = 30;
+optimizer = tf.train.adam(0.0001);
 num_vis_layers = 5;
+use_one_hot = false;
+
+// Aliases (for convenience)
+res = resolution;
+lvs = layer_vis_size;
+
 
 // Initialize canvases
 // Original input image
@@ -24,22 +40,6 @@ for (var i = 0; i < num_vis_layers; i ++) {
 	ctx_convis.push(canvases_convis[i].getContext('2d'));
 }
 
-// Settings
-num_data = 250;
-max_circles = 10;
-resolution = [30, 30];
-conv_filters = 8;
-layer_vis_size = 100;
-training_delay = 0.01;
-train_percent = 70;
-test_percent = 30;
-optimizer = tf.train.adam(0.0001);
-num_vis_layers = 5;
-use_one_hot = false;
-
-// Aliases (for convenience)
-res = resolution;
-lvs = layer_vis_size;
 
 // Arrays of complete sets of inputs and outputs
 inputs = [];
