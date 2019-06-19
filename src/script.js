@@ -254,8 +254,12 @@ function train() {
 	)
 }
 
+// Draw graph of loss over time
+// Most of this is self-explanatory
 const graph = new Chart(ctx_graph, {
+	// Line chart
 	type: 'line',
+	// Data ~
 	data: {
 		labels: epoch,
 		datasets: [
@@ -310,4 +314,5 @@ const graph = new Chart(ctx_graph, {
 	}
 });
 
+// Run training function at pre-set intervals
 window.setInterval(train, training_delay / 1000);
