@@ -1,0 +1,5 @@
+#main-canvases > canvas {
+	z-index: 1;
+	margin: 25px;
+	box-shadow: 0px 0px 15px lightgray;
+}
