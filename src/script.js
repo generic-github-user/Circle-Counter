@@ -32,7 +32,7 @@ canvases_convis = [];
 ctx_convis = [];
 // Add canvases to page
 for (var i = 0; i < num_vis_layers; i ++) {
-	convis.innerHTML += '<canvas id="conv-'+i+'" width="100" height="800"></canvas>';
+	convis.innerHTML += '<canvas data-tilt id="conv-'+i+'" width="100" height="800"></canvas>';
 }
 // Get contexts and store in array
 for (var i = 0; i < num_vis_layers; i ++) {
