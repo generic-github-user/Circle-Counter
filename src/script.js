@@ -85,6 +85,21 @@ model.add(tf.layers.maxPooling2d(
 		strides: 2
 	}
 ));
+model.add(tf.layers.conv2d(
+	{
+		filters: 8,
+		kernelSize: 3,
+		stride: 1,
+		activation: 'relu'
+	}
+));
+model.add(tf.layers.maxPooling2d(
+	{
+		poolSize: 2,
+		strides: 2
+	}
+));
+
 model.add(tf.layers.flatten({}));
 model.add(tf.layers.dense({units: units * 0.75, activation: 'tanh'}));
 model.add(tf.layers.dense({units: units * 0.5, activation: 'tanh'}));
