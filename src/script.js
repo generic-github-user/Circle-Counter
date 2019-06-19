@@ -87,22 +87,6 @@ model.add(tf.layers.conv2d(
 		activation: 'relu'
 	}
 ));
-// Second maxPooling2d layer
-model.add(tf.layers.maxPooling2d(
-	{
-		poolSize: 2,
-		strides: 2
-	}
-));
-// Third conv2d layer
-model.add(tf.layers.conv2d(
-	{
-		filters: conv_filters,
-		kernelSize: 3,
-		stride: 1,
-		activation: 'relu'
-	}
-));
 // First maxPooling2d layer
 model.add(tf.layers.maxPooling2d(
 	{
@@ -111,6 +95,22 @@ model.add(tf.layers.maxPooling2d(
 	}
 ));
 // Second conv2d layer
+model.add(tf.layers.conv2d(
+	{
+		filters: conv_filters,
+		kernelSize: 3,
+		stride: 1,
+		activation: 'relu'
+	}
+));
+// Second maxPooling2d layer
+model.add(tf.layers.maxPooling2d(
+	{
+		poolSize: 2,
+		strides: 2
+	}
+));
+// Third conv2d layer
 model.add(tf.layers.conv2d(
 	{
 		filters: conv_filters,
