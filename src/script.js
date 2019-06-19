@@ -346,3 +346,12 @@ const graph = new Chart(ctx_graph, {
 
 // Run training function at pre-set intervals
 window.setInterval(train, training_delay / 1000);
+
+$(document).ready(
+	() => {
+		$('[data-tilt]').tilt({
+			maxTilt: 2,
+			scale: 1.01
+		})
+	}
+)
