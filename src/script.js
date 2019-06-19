@@ -16,7 +16,7 @@ for (var i = 0; i < 3; i ++) {
 }
 
 num_data = 250;
-resolution = [20, 20];
+resolution = [30, 30];
 
 res = resolution;
 
