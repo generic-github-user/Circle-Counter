@@ -17,6 +17,12 @@ for (var i = 0; i < 3; i ++) {
 
 num_data = 250;
 resolution = [30, 30];
+conv_filters = 8;
+layer_vis_size = 100;
+training_delay = 0.01;
+train_percent = 70;
+test_percent = 30;
+optimizer = tf.train.adam(0.0001);
 
 res = resolution;
 
@@ -48,8 +54,8 @@ tf.browser.toPixels(
 	canvas_flat
 );
 
-train_split = Math.floor(num_data * 0.7);
-test_split = Math.floor(num_data * 0.3);
+train_split = Math.floor(num_data * train_percent * 0.01);
+test_split = Math.floor(num_data * test_percent * 0.01);
 tr_s = train_split;
 te_s = test_split;
 
@@ -64,14 +70,13 @@ testing_out = outputs.slice([tr_s], [te_s]);
 // ctx.getImageData(0, 0, canvas.width, canvas.height)
 
 const loss = (pred, label) => pred.sub(label).square().mean();
-const optimizer = tf.train.adam(0.001);
 const model = tf.sequential();
 const units = res[0] * res[1] * 1;
 
 model.add(tf.layers.conv2d(
 	{
 		inputShape: [res[0], res[1], 1],
-		filters: 8,
+		filters: conv_filters,
 		kernelSize: 3,
 		strides: 1,
 		activation: 'relu'
@@ -85,7 +90,7 @@ model.add(tf.layers.maxPooling2d(
 ));
 model.add(tf.layers.conv2d(
 	{
-		filters: 8,
+		filters: conv_filters,
 		kernelSize: 3,
 		stride: 1,
 		activation: 'relu'
@@ -99,7 +104,7 @@ model.add(tf.layers.maxPooling2d(
 ));
 model.add(tf.layers.conv2d(
 	{
-		filters: 8,
+		filters: conv_filters,
 		kernelSize: 3,
 		stride: 1,
 		activation: 'relu'
@@ -125,14 +130,14 @@ epoch = [];
 train_loss = [];
 test_loss = [];
 //out = tf.tensor([0])
-out = tf.variable(tf.zeros([100, 100, 1]))
+out = tf.variable(tf.zeros([lvs, lvs, 1]))
 
 function renderConvLayers () {
 	console.log('---------------------------------')
 	console.log(tf.memory())
 	for (let j = 0; j < 1; j ++) {
 		console.log('j __________')
-		for (let w = 0; w < 8; w ++) {
+		for (let w = 0; w < conv_filters; w ++) {
 			tf.tidy(
 				() => {
 					console.log(tf.memory())
@@ -146,7 +151,7 @@ function renderConvLayers () {
 							[28, 28, 1]
 						)
 						.clipByValue(0, 1)
-						.resizeNearestNeighbor([100, 100])
+						.resizeNearestNeighbor([lvs, lvs])
 					out.assign(val);
 					
 					console.log(tf.memory())
@@ -160,9 +165,9 @@ function renderConvLayers () {
 							//console.log(j)
 							//console.log(d)
 							ctx_convis[j].putImageData(
-								new ImageData(d, 100, 100),
+								new ImageData(d, lvs, lvs),
 								0,
-								w * 100
+								w * lvs
 							)
 							//out.dispose();
 							//console.log(out)
@@ -269,4 +274,4 @@ const graph = new Chart(ctx_graph, {
 	}
 });
 
-window.setInterval(train, 10);
+window.setInterval(train, training_delay / 1000);
