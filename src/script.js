@@ -1,3 +1,5 @@
+num_vis_layers = 5;
+
 // Initialize canvases
 // Original input image
 canvas = document.querySelector('#canvas');
@@ -13,11 +15,11 @@ ctx_graph = canvas_graph.getContext('2d');
 canvases_convis = [];
 ctx_convis = [];
 // Add canvases to page
-for (var i = 0; i < 3; i ++) {
+for (var i = 0; i < num_vis_layers; i ++) {
 	convis.innerHTML += '<canvas id="conv-'+i+'" width="100" height="800"></canvas>';
 }
 // Get contexts and store in array
-for (var i = 0; i < 3; i ++) {
+for (var i = 0; i < num_vis_layers; i ++) {
 	canvases_convis.push(document.querySelector('#conv-' + i));
 	ctx_convis.push(canvases_convis[i].getContext('2d'));
 }
@@ -30,6 +32,7 @@ training_delay = 0.01;
 train_percent = 70;
 test_percent = 30;
 optimizer = tf.train.adam(0.0001);
+num_vis_layers = 5;
 
 // Aliases (for convenience)
 res = resolution;
@@ -182,29 +185,29 @@ function renderConvLayers() {
 	console.log(tf.memory())
 	tf.tidy(
 		() => {
+			// Slice one image from the input tensor
+			out_val = inputs.slice(
+					[num_data - 1],
+					[1]
+				);
+			
 			// Loop through each layer of the network
-			for (let j = 0; j < 1; j ++) {
+			for (let j = 0; j < num_vis_layers; j ++) {
 				console.log('j __________')
 				// Generate layer output
-				val = model.layers[0]
-					.apply(
-						// Slice one image from the input tensor
-						inputs.slice(
-							[num_data - 1],
-							[1]
-						)
-					)
+				out_val = model.layers[j]
+					.apply(out_val)
 					// Limit to correct value range for float32 tensor
 					.clipByValue(0, 1)
 				// Loop through each filter in the conv layer, if applicable
 				for (let w = 0; w < conv_filters; w ++) {
-					b = val
+					b = out_val
 						// Get rid of batch dimension
 						.squeeze()
 						// Slice one filter from the layer output
 						.slice(
 							[0, 0, w - 1],
-							[28, 28, 1]
+							[-1, -1, 1]
 						)
 						// Resize to match canvas size
 						.resizeNearestNeighbor([lvs, lvs]);
