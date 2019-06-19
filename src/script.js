@@ -74,16 +74,23 @@ tf.browser.toPixels(
 	canvas_flat
 );
 
+// Calculate split between training data and testing data
 train_split = Math.floor(num_data * train_percent * 0.01);
 test_split = Math.floor(num_data * test_percent * 0.01);
+// More aliases
 tr_s = train_split;
 te_s = test_split;
 
+// Merge inputs into one big tensor
 inputs = tf.stack(inputs);
+// Split input tensor into training/testing data
 training_in = inputs.slice([0], [tr_s]);
 testing_in = inputs.slice([tr_s], [te_s]);
 
+// Generate a tensor from the output data
 outputs = tf.tensor(outputs).expandDims(1);
+//outputs = tf.oneHot(outputs, max_circles);
+// Split output tensor into training/testing data
 training_out = outputs.slice([0], [tr_s]);
 testing_out = outputs.slice([tr_s], [te_s]);
 
