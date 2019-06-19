@@ -1,15 +1,22 @@
+// Initialize canvases
+// Original input image
 canvas = document.querySelector('#canvas');
 ctx = canvas.getContext('2d');
+// For drawing downscaled version of input
 canvas_flat = document.querySelector('#flat');
 ctx_flat = canvas_flat.getContext('2d');
+// Loss graph
 canvas_graph = document.querySelector('#graph');
 ctx_graph = canvas_graph.getContext('2d');
 
+// Arrays to store generated canvases and drawing contexts
 canvases_convis = [];
 ctx_convis = [];
+// Add canvases to page
 for (var i = 0; i < 3; i ++) {
 	convis.innerHTML += '<canvas id="conv-'+i+'" width="100" height="800"></canvas>';
 }
+// Get contexts and store in array
 for (var i = 0; i < 3; i ++) {
 	canvases_convis.push(document.querySelector('#conv-' + i));
 	ctx_convis.push(canvases_convis[i].getContext('2d'));
