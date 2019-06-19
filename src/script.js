@@ -25,6 +25,7 @@ test_percent = 30;
 optimizer = tf.train.adam(0.0001);
 
 res = resolution;
+lvs = layer_vis_size;
 
 inputs = [];
 outputs = [];
