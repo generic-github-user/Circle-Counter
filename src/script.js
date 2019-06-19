@@ -61,9 +61,10 @@ const units = res[0] * res[1] * 1;
 model.add(tf.layers.conv2d(
 	{
 		inputShape: [res[0], res[1], 1],
-		filters: 2,
+		filters: 8,
 		kernelSize: 3,
-		strides: 1
+		strides: 1,
+		activation: 'relu'
 	}
 ));
 model.add(tf.layers.maxPooling2d(
@@ -74,9 +75,10 @@ model.add(tf.layers.maxPooling2d(
 ));
 model.add(tf.layers.conv2d(
 	{
-		filters: 2,
+		filters: 8,
 		kernelSize: 3,
-		stride: 1
+		stride: 1,
+		activation: 'relu'
 	}
 ));
 model.add(tf.layers.maxPooling2d(
@@ -101,10 +103,9 @@ model.add(tf.layers.maxPooling2d(
 ));
 
 model.add(tf.layers.flatten({}));
-model.add(tf.layers.dense({units: units * 0.75, activation: 'tanh'}));
-model.add(tf.layers.dense({units: units * 0.5, activation: 'tanh'}));
-model.add(tf.layers.dense({units: units * 0.25, activation: 'tanh'}));
-model.add(tf.layers.dropout(0.5, {rate: 0.5}));
+model.add(tf.layers.dense({units: 32}));
+model.add(tf.layers.leakyReLU());
+model.add(tf.layers.dropout(0.8, {rate: 0.8}));
 model.add(tf.layers.dense({units: 1}));
 
 model.summary();
