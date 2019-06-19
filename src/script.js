@@ -124,6 +124,61 @@ e = 0;
 epoch = [];
 train_loss = [];
 test_loss = [];
+//out = tf.tensor([0])
+out = tf.variable(tf.zeros([100, 100, 1]))
+
+function renderConvLayers () {
+	console.log('---------------------------------')
+	console.log(tf.memory())
+	for (let j = 0; j < 1; j ++) {
+		console.log('j __________')
+		for (let w = 0; w < 8; w ++) {
+			tf.tidy(
+				() => {
+					console.log(tf.memory())
+					val = model.layers[0]
+						.apply(
+							inputs.slice([num_data - 1], [1])
+						)
+						.squeeze()
+						.slice(
+							[0, 0, w - 1],
+							[28, 28, 1]
+						)
+						.clipByValue(0, 1)
+						.resizeNearestNeighbor([100, 100])
+					out.assign(val);
+					
+					console.log(tf.memory())
+					//console.log(out)
+					tf.browser.toPixels(
+						out,
+						//out.squeeze().reshape([28*4, 28*2, 1]).clipByValue(0, 1).resizeNearestNeighbor([200, 400]),
+						//tf.randomUniform([28, 28, 1]).resizeNearestNeighbor([100, 100]),
+					).then(
+						(d) => {
+							//console.log(j)
+							//console.log(d)
+							ctx_convis[j].putImageData(
+								new ImageData(d, 100, 100),
+								0,
+								w * 100
+							)
+							//out.dispose();
+							//console.log(out)
+							//tf.disposeVariables();
+						}
+					)
+					console.log(tf.memory())
+				}
+			)
+			
+			//.resolve()
+			//console.log(data);
+		}
+	}
+	console.log(tf.memory())
+}
 
 function train() {
 	tf.tidy(
