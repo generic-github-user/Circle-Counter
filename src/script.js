@@ -89,6 +89,7 @@ model.add(tf.layers.flatten({}));
 model.add(tf.layers.dense({units: units * 0.75, activation: 'tanh'}));
 model.add(tf.layers.dense({units: units * 0.5, activation: 'tanh'}));
 model.add(tf.layers.dense({units: units * 0.25, activation: 'tanh'}));
+model.add(tf.layers.dropout(0.5, {rate: 0.5}));
 model.add(tf.layers.dense({units: 1}));
 
 model.summary();
