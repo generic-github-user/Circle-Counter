@@ -181,6 +181,10 @@ function renderConvLayers () {
 }
 
 function train() {
+	if (e % 10 == 0 || e == 0) {
+		renderConvLayers();
+	}
+	
 	tf.tidy(
 		() => {
 			for (var i = 0; i < 1; i ++) {
